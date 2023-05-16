@@ -27,4 +27,4 @@ asbestos = st.selectbox('Exposure to asbestos', [(0, 'No'), (1, 'Yes')])
 family = st.selectbox('Family history of lung cancer', [(0, 'No'), (1, 'Yes')])
 
 if st.button('Calculate Score'):
-    score = calculate_gupta_score(age, gender[0], smoke[0], asbestos[0], family [0])
+    score = calculate_lung_cancer_score(age, gender[0], smoke[0], asbestos[0], family [0])
