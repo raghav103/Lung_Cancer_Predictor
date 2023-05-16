@@ -1,65 +1,30 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import joblib
 
-# Define the input features and their respective default values
-default_age = 50
-default_gender = 'Male'
-default_smoking_history = 'Never'
-default_exposure_history = 'No'
+def calculate_lung_cancer_score(age, gender, smoke, asbestos, family):
+    """
+    This function calculates the Gupta Postoperative Respiratory Failure Risk based on the input parameters.
+    """
+    # The following is pseudo-code for calculating the score.
+    # Replace with the actual calculation algorithm.
 
-# Define the categorical variables and their respective options
-gender_options = ['Male', 'Female']
-smoking_history_options = ['Never', 'Former', 'Current']
-exposure_history_options = ['No', 'Yes']
+    score = 0
+    score += age
+    score += gender
+    score += smoke
+    score += asbestos
+    score += family 
 
-# Load the trained model
-model = joblib.load('model.pkl')
+    return score
 
-# Define the function to preprocess the user inputs
-def preprocess_input(age, gender, smoking_history, exposure_history):
-    # Encode the categorical variables
-    gender_male = 1 if gender == 'Male' else 0
-    smoking_history_encoded = smoking_history_options.index(smoking_history)
-    exposure_history_encoded = exposure_history_options.index(exposure_history)
-    
-    # Concatenate the input features
-    input_features = np.array([age, gender_male, smoking_history_encoded, exposure_history_encoded]).reshape(1, -1)
-    
-    return input_features
+st.title('Lung Cancer Predictor')
+st.write('The streamlit code provided is a sample implementation of a Lung Cancer Risk Calculator. It uses a logistic regression model to predict the probability of a patient having lung cancer based on their age, gender, smoking history, and exposure history.')
 
-# Define the function to predict the lung cancer risk
-def predict_cancer(input_features):
-    # Predict the probability of lung cancer
-    cancer_prob = model.predict_proba(input_features)[:,1][0]
-    
-    return cancer_prob
+age = st.slider('Age', 0, 100, 30)
+gender = st.selectbox('Gender', [(0, 'Male'), (1, 'Female')])
+smoke = st.selectbox('Smoke', [(0, 'No'), (1, 'Yes')])
+asbestos = st.selectbox('Exposure to asbestos', [(0, 'No'), (1, 'Yes')])
+family = st.selectbox('Family history of lung cancer', [(0, 'No'), (1, 'Yes')])
 
-# Define the streamlit app
-def app():
-    # Set the title and the page icon
-    st.set_page_config(page_title='Lung Cancer Risk Calculator', page_icon=':hospital:')
-    
-    # Set the app title
-    st.title('Lung Cancer Risk Calculator')
-    
-    # Define the input widgets
-    age = st.slider('Age', 18, 100, default_age)
-    gender = st.selectbox('Gender', gender_options, index=gender_options.index(default_gender))
-    smoking_history = st.selectbox('Smoking History', smoking_history_options, index=smoking_history_options.index(default_smoking_history))
-    exposure_history = st.selectbox('Exposure History', exposure_history_options, index=exposure_history_options.index(default_exposure_history))
-    
-    # Preprocess the input features
-    input_features = preprocess_input(age, gender, smoking_history, exposure_history)
-    
-    # Make the prediction
-    cancer_prob = predict_cancer(input_features)
-    
-    # Display the prediction
-    st.subheader('Results')
-    if cancer_prob >= 0.5:
-        st.write('Based on the input features, the patient is predicted to have a high risk of lung cancer.')
-    else:
-        st.write('Based on the input features, the patient is predicted to have a low risk of lung cancer.')
-    st.write(f'Predicted Probability of Lung Cancer: {cancer_prob:.2%}')
+if st.button('Calculate Score'):
+    score = calculate_gupta_score(age, gender[0], smoke[0], asbestos[0], family [0])
